@@ -110,6 +110,21 @@
             <strong>No watchlist found!</strong> Add movies to get started.
         </div>
 
+         <!-- No Watched status  Found -->
+         <div class="alert alert-warning text-center rounded-4" role="alert" th:if="${watchedStatus}">
+            <strong>No watched watchlist found!</strong> Please update your watch status.
+        </div>
+
+         <!-- No Unwatched status  Found -->
+        <div class="alert alert-warning text-center rounded-4" role="alert" th:if="${watchedStatus2}">
+            <strong>No Unwatched watchlist found!</strong> Please update your watch status.
+        </div>
+
+         <!-- No In progress status  Found -->
+        <div class="alert alert-warning text-center rounded-4" role="alert" th:if="${watchedStatus3}">
+            <strong>No In Progress watchlist found!</strong> Please update your watch status.
+        </div>
+
         <form method="GET" action="/watchlist/filterMovies" class="d-flex align-items-end gap-3">
             <div>
                 <label for="filterMovies" class="form-label"> Filter by:</label>
@@ -117,6 +132,9 @@
                     <option value="">Select a filter...</option>
                     <option value="rating">Rating (High to Low)</option>
                     <option value="dateDesc">Release Date (Newest)</option>
+                    <option value="Watched">Watched</option>
+                    <option value="Unwatched">Unwatched</option>
+                    <option value="In Progress">In progress</option>
                 </select>
             </div>
         

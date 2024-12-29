@@ -1,5 +1,6 @@
 package movieAppTracker.movieApp.controller;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -136,7 +137,7 @@ public class watchListController {
             model.addAttribute("filterGenre", filterMovieGenre);
             model.addAttribute("page", page);
 
-            return "successfulUpcomingWatchList";
+            return "successfulUpcomingWatchlist";
         }
 
     }
@@ -246,6 +247,7 @@ public class watchListController {
                     model.addAttribute("noWatchList", true);
                     return "watchList";
                 } else {
+                   
                     model.addAttribute("watchLists", sortedWatchList);
                     // Add a new notes object to watchlist
                     model.addAttribute("notes", new Notes());
@@ -260,12 +262,58 @@ public class watchListController {
                     model.addAttribute("noWatchList", true);
                     return "watchList";
                 } else {
+                  
                     model.addAttribute("watchLists", sortedWatchList);
                     // Add a new notes object to watchlist
                     model.addAttribute("notes", new Notes());
                     return "watchList";
                 }
-            }
+            } else if(filter.equals("Watched")){
+                List<watchList> sortedWatchlist = watchList1.stream()
+                    .filter(p -> p.getWatchStatus().equals("Watched"))
+                    .collect(Collectors.toList());
+
+                    if (sortedWatchlist.size() == 0) {
+                        model.addAttribute("watchedStatus", true);
+                        return "watchList";
+                    } else {
+                        session.setAttribute("filter", sortedWatchlist);
+                        model.addAttribute("watchLists", sortedWatchlist);
+                        // Add a new notes object to watchlist
+                        model.addAttribute("notes", new Notes());
+                        return "watchList";
+                    }
+            } else if(filter.equals("Unwatched")){
+                List<watchList> sortedWatchList = watchList1.stream()
+                    .filter(p -> p.getWatchStatus().equals("Unwatched"))
+                    .collect(Collectors.toList());
+
+                    if (sortedWatchList.size() == 0) {
+                        model.addAttribute("watchedStatus2", true);
+                        return "watchList";
+                    } else {
+                        session.setAttribute("filter", sortedWatchList);
+                        model.addAttribute("watchLists", sortedWatchList);
+                        // Add a new notes object to watchlist
+                        model.addAttribute("notes", new Notes());
+                        return "watchList";
+                    }
+                } else if(filter.equals("In Progress")){
+                    List<watchList> sortedWatchList = watchList1.stream()
+                        .filter(p -> p.getWatchStatus().equals("In Progress"))
+                        .collect(Collectors.toList());
+    
+                        if (sortedWatchList.size() == 0) {
+                            model.addAttribute("watchedStatus3", true);
+                            return "watchList";
+                        } else {
+                            session.setAttribute("filter", sortedWatchList);
+                            model.addAttribute("watchLists", sortedWatchList);
+                            // Add a new notes object to watchlist
+                            model.addAttribute("notes", new Notes());
+                            return "watchList";
+                        }
+                    }
 
             return "Error";
 
@@ -285,11 +333,28 @@ public class watchListController {
         }
 
         String username = (String) session.getAttribute("username");
-        watchlistSvc.removeAll(username);
-        model.addAttribute("successful", true);
-        
-        return "deleteAllWatchlist";
 
+        List<watchList> filterList = (List<watchList>) session.getAttribute("filter");
+
+        if(filterList==null || filterList.size()==0){
+            System.out.println("Non filter");
+            watchlistSvc.removeAll(username);
+            model.addAttribute("successful", true);
+            return "deleteAllWatchlist";
+
+        } else{
+            for(watchList list: filterList){
+                System.out.println("filter");
+                System.out.println(filterList.size());
+                watchlistSvc.removeWatchList(username, list.getId());
+            }
+            List<watchList> watchList = new ArrayList<>();
+            session.setAttribute("filter", watchList);
+            return "deleteAllWatchlist";
+        }
+
+        
+       
     }   
 
 }

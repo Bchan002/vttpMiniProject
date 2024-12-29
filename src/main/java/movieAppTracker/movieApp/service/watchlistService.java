@@ -99,12 +99,12 @@ public class watchlistService {
         for(String id: map2.keySet()){
             //cast it 
             String object = map2.get(id).toString();
-            System.out.println("yourObject is " + object);
+            //System.out.println("yourObject is " + object);
             Reader reader = new StringReader(object);
             JsonReader jsonReader = Json.createReader(reader);
             JsonObject object2 = jsonReader.readObject();
 
-            System.out.println(object2.toString());
+            //System.out.println(object2.toString());
             watchList list = new watchList();
             list.setId(object2.getString("id"));
             list.setTitle(object2.getString("title"));
@@ -134,7 +134,7 @@ public class watchlistService {
         JsonReader jsonReader = Json.createReader(reader);
         JsonObject object = jsonReader.readObject();
 
-        System.out.println(object.toString());
+        //System.out.println(object.toString());
 
          //Create a new JsonObject to store in redis 
          JsonObject object2 = Json.createObjectBuilder()

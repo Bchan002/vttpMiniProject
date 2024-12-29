@@ -1,6 +1,8 @@
 package movieAppTracker.movieApp.controller;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -62,12 +64,15 @@ public class reviewController {
         try {
 
             List<Movie> commentList = postSvc.retreiveMovie();
+            List<Movie> sortedCommentList = commentList.stream()
+                .sorted(Comparator.comparing(Movie::getTitle))
+                .collect(Collectors.toList());
 
             if (commentList.size() == 0) {
                 model.addAttribute("noComments", true);
                 return "reviews";
             } else {
-                model.addAttribute("commentLists", commentList);
+                model.addAttribute("commentLists", sortedCommentList);
                 return "reviews";
             }
 
