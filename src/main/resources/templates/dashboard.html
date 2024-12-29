@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<style>
+    .bg-light{
+        background-image: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg'); 
+    }
+    .btn-teal {
+        
+        background-color: #c4545c;
+        color: white;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        transition: all 0.3s ease;
+    }
+
+    .btn-teal:hover {
+        background-color: #c4545c;
+        color: white;
+    }
+
+    .btn-purple {
+        background-color: #b3a0a4;
+        color: white;
+    }
+
+    .btn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        transition: all 0.3s ease;
+    }
+
+    .btn-purple:hover {
+        background-color: #b3a0a4;
+        color: white;
+    }
+
+    .btn-orange{
+        background-color: #2e72ae;
+        color: white;
+    }
+
+    .btn-orange:hover {
+        background-color: #2e72ae;
+        color: white;
+    }
+
+    .btn-blue{
+        background-color: #958197;
+        color: white;
+    }
+
+    .btn-blue:hover {
+        background-color: #958197;
+        color: white;
+    }
+
+    .btn-pink{
+        background-color: #e6b4aa;
+        color: white;
+    }
+
+    .btn-pink:hover {
+        background-color: #e6b4aa;
+        color: white;
+    }
+
+
+</style>
+
+<body class="bg-light">
+
+    <!-- Navbar -->
+    <div th:replace="~{navbar/navbar :: navbar}"></div>
+
+    <!-- Main Dashboard -->
+    <div class="container py-5">
+        <!-- Welcome Section -->
+        <div class="text-center mb-5">
+            <h1 class="display-5 fw-bold">Welcome, <span th:text="${username}"></span>!</h1>
+            <p class="text-muted">Explore and manage your favorite movies all in one place.</p>
+        </div>
+
+        <!-- Dashboard Features -->
+        <div class="row g-4">
+            <!-- Search Movies -->
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold">Search Movies</h5>
+                        <p class="card-text text-muted mb-4">Find your favorite movies and shows easily.</p>
+                        <form method="GET" action="/search/movies">
+                            <div class="input-group">
+                                <input type="text" name="query" id="query" class="form-control"
+                                    placeholder="Enter movie name">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-search"></i> Search
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Popular films -->
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold">Popular Movies</h5>
+                        <p class="card-text text-muted mb-4">Discover today's most popular films.</p>
+                        <form method="GET" action="/popular/movies">
+                            <button class="btn btn-teal w-100">View Popular Movies</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- View Upcoming films -->
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold">Upcoming Movies</h5>
+                        <p class="card-text text-muted mb-4">Discover Upcoming films.</p>
+                        <form method="GET" action="/upcoming/movies">
+                            <button class="btn btn-purple w-100">View Upcoming Movies</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Watchlist -->
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold">Your Watchlist</h5>
+                        <p class="card-text text-muted mb-4">Access your saved movies quickly.</p>
+                        <form method="GET" action="/watchlist/view">
+                            <button class="btn btn-blue w-100">View Watchlist</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reviews -->
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold">Reviews</h5>
+                        <p class="card-text text-muted mb-4">Read reviews from other movie enthusiasts.</p>
+                        <form method="GET" action="/post/viewReviews">
+                            <button class="btn btn-pink w-100">View Reviews</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!--Guess Movie Game-->
+            <div class="col-md-4">
+                <div class="card shadow-sm border-0 rounded-4">
+                    <div class="card-body text-center">
+                        <h5 class="card-title fw-bold">Guess the Movie Title Beta</h5>
+                        <p class="card-text text-muted mb-4">Challenge yourself to see how much you know.</p>
+                        <form method="GET" action="/guessMovieGame">
+                            <button class="btn btn-orange w-100">Play Game</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Logout Button -->
+            <div class="text-center mt-5">
+                <form method="GET" action="/protected/logout">
+                    <button type="submit" class="btn btn-danger">Logout</button>
+                </form>
+            </div>
+        </div>
+
+</body>
+
+</html>

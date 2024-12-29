@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Watchlist</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+ 
+        .hero-section {
+            background-color: #343a40;
+            color: #ffffff;
+            padding: 50px 0;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+        }
+
+        .card {
+            border: none;
+            transition: transform 0.3s ease;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-img-top {
+            height: 400px;
+            object-fit: cover;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            border-radius: 0 0 20px 20px;
+        }
+
+        .btn {
+            border-radius: 15px;
+            padding: 0.5rem 1.5rem;
+        }
+
+        .add-btn {
+            background-color: #06c;
+            border: none;
+            padding: 0.75rem;
+            transition: all 0.3s ease;
+            border-radius: 15px;
+        }
+
+        .add-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .modal-content {
+            border-radius: 20px;
+        }
+
+        .modal-header {
+            border-radius: 20px 20px 0 0;
+        }
+
+        .form-control, .form-select {
+            border-radius: 12px;
+        }
+
+        .no-results {
+            font-size: 1.5rem;
+            color: #6c757d;
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div th:replace="~{navbar/navbar :: navbar}"></div>
+
+    <!-- Hero Section -->
+    <header class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Your Watchlist</h1>
+            <p class="lead">Manage and explore your saved movies here.</p>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container py-5">
+        <a href="/protected/dashboard" class="btn btn-secondary mb-3 rounded-4">
+            <i class="bi bi-arrow-left-circle"></i> Back to dashboard
+        </a>
+        <!-- No Watchlist Found -->
+        <div class="alert alert-warning text-center rounded-4" role="alert" th:if="${noWatchList}">
+            <strong>No watchlist found!</strong> Add movies to get started.
+        </div>
+
+        <form method="GET" action="/watchlist/filterMovies" class="d-flex align-items-end gap-3">
+            <div>
+                <label for="filterMovies" class="form-label"> Filter by:</label>
+                <select name="filterMovie" id="filter" class="form-select">
+                    <option value="">Select a filter...</option>
+                    <option value="rating">Rating (High to Low)</option>
+                    <option value="dateDesc">Release Date (Newest)</option>
+                </select>
+            </div>
+        
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-filter"></i> Apply Filter
+            </button>
+        
+            <a href="/watchlist/view" class="btn btn-secondary">
+                <i class="bi bi-x-circle"></i> Clear Filter
+            </a>
+
+            <a href="/watchlist/removeAll" class="btn btn-danger">
+                <i class="bi bi-x-circle"></i> Remove All
+            </a>
+        </form>
+
+        <br>
+
+        <!-- Watchlist -->
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col" th:each="watchList : ${watchLists}">
+                <div class="card">
+                    <img th:src="${watchList.posterImage}" class="card-img-top" alt="Movie Poster">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${watchList.title}"></h5>
+                        <p class="card-text mb-2"><strong>Release Date:</strong> <span th:text="${watchList.date}"></span></p>
+                        <p class="card-text"><strong>Status:</strong> <span th:text="${watchList.watchStatus}"></span></p>
+                        <p class="card-text"><strong>Rating:</strong> <span th:text="${watchList.rating}"></span></p>
+                        <div class="d-flex justify-content-between mt-4">
+                            <form method="POST" th:action="@{'/watchlist/remove/' + ${watchList.id}}">
+                                <button class="btn btn-outline-danger rounded-4">Remove</button>
+                            </form>
+                            <button class="btn btn-primary rounded-4" data-bs-toggle="modal"
+                                th:attr="data-bs-target='#updateModal-' + ${watchList.id}">Update</button>
+                            <button class="btn btn-outline-primary rounded-4" data-bs-toggle="modal"
+                                th:attr="data-bs-target='#reviewModal-' + ${watchList.id}">Review</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Update -->
+                <div class="modal fade" th:id="'updateModal-' + ${watchList.id}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" th:text="'Update Details for ' + ${watchList.title}" id="updateModalLabel"></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="POST" th:action="@{'/watchlist/update/' + ${watchList.id}}" th:object="${notes}">
+                                    <div class="mb-3">
+                                        <label for="status" class="form-label">Watch Status:</label>
+                                        <select class="form-select rounded-4" th:field="*{watchStatus}">
+                                            <option value="Unwatched">Unwatched</option>
+                                            <option value="Watched">Watched</option>
+                                            <option value="In Progress">In Progress</option>
+                                        </select>
+                                        <div class="text-danger" th:if="${#fields.hasErrors('watchStatus')}" th:errors="*{watchStatus}"></div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="rating" class="form-label">Rating:</label>
+                                        <input type="number" class="form-control rounded-4" th:field="*{ratings}" placeholder="Rate out of 10" required>
+                                        <div class="text-danger" th:if="${#fields.hasErrors('ratings')}" th:errors="*{ratings}"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <button type="submit" class="btn btn-success rounded-4">Update</button>
+                                        <button type="button" class="btn btn-secondary rounded-4" data-bs-dismiss="modal">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+               
+                <!--Review-->
+                <div class="modal fade" th:id="'reviewModal-' + ${watchList.id}" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" th:text="'Post Review for ' + ${watchList.title}" id="reviewModalLabel"></h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="POST" th:action="@{'/post/' + ${watchList.id}}">
+                                    <div class="mb-3">
+                                        <label for="rating" class="form-label">Rating:</label>
+                                        <input type="number" class="form-control rounded-4" name="rating" placeholder="Rate out of 10" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="review" class="form-label">Your Review:</label>
+                                        <textarea class="form-control" name="comments" rows="4" placeholder="Write your review here..."></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Post</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

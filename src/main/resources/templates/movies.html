@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Tracker - Search Results</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #343a40;
+        }
+
+        .hero-section {
+            background-color: #343a40;
+            color: #ffffff;
+            padding: 50px 0;
+        }
+
+        .hero-section h1 {
+            font-size: 3rem;
+        }
+
+        .hero-section p {
+            font-size: 1.2rem;
+        }
+
+        .card {
+            border: none;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-img-top {
+            height: 400px;
+            object-fit: cover;
+        }
+
+        .add-btn {
+            background-color: #06c;
+            border: none;
+            padding: 0.75rem;
+            transition: all 0.3s ease;
+        }
+
+        .add-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .no-results {
+            font-size: 1.5rem;
+            color: #6c757d;
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div th:replace="~{navbar/navbar :: navbar}"></div>
+
+    <!-- Hero Section -->
+    <header class="hero-section text-center">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Search Results</h1>
+            <p class="lead">Find your favorite movies and explore more!</p>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container my-5">
+        <a href="/protected/dashboard" class="btn btn-secondary mb-3 rounded-4">
+            <i class="bi bi-arrow-left-circle"></i> Back to dashboard
+        </a>
+
+        <!-- No Results Section -->
+        <div th:if="${searchNotFound}" class="no-results">
+            <p>Search Not Found. Try a different query!</p>
+        </div>
+
+        <!-- Movie Grid Section -->
+        <div class="row row-cols-1 row-cols-md-3 g-4" th:unless="${searchNotFound}">
+            <!-- Loop over movies -->
+            <div class="col" th:each="movie : ${movies}">
+                <a th:href="@{'/search/' + ${movie.id}}" class="text-decoration-none">
+                    <div class="card shadow rounded-4">
+                        <!-- Movie Poster -->
+                        <img th:src="${movie.poster}" class="card-img-top rounded-top-4" alt="Movie Poster">
+                        <!-- Card Content -->
+                        <div class="card-body text-center p-4">
+                            <h5 class="card-title mb-3" th:text="${movie.title}"></h5>
+                            <p class="card-text mb-2">
+                                <strong>Release Date:</strong>
+                                <span th:text="${movie.releaseDate}"></span>
+                            </p>
+                            <p class="card-text mb-3">
+                                <strong>Rating:</strong>
+                                <span th:text="${movie.rating}"></span>/10
+                            </p>
+                            
+                            <!-- Add to Watchlist Button -->
+                            <form method="POST" th:action="@{'/watchlist/' + ${movie.id}}">
+                                <button type="submit" class="btn add-btn rounded-4 w-100 text-white">
+                                    <i class="bi bi-plus-circle"></i> Add to Watchlist
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

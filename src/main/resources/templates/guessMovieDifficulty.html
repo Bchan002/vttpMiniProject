@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select a Difficulty</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #2d1b69;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .game-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            width: 95%;
+            margin: auto;
+        }
+
+        .game-title {
+            color: #8a2be2;
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-purple {
+            background-color: #8a2be2;
+            color: white;
+            padding: 12px 30px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            border: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-purple:hover {
+            background-color: #7525c5;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="game-container">
+            <h1 class="game-title text-center">Guess the Movie Game</h1>
+            <div class="text-center">
+                <h4>Please select a Difficulty level</h4>
+            </div>
+            <br>
+            <div class="text-center">
+                <form method="GET" action="/guessMovieGame/low">
+                    <button type="submit" class="btn btn-purple">Low</button>
+                </form>
+            </div>
+
+            <br>
+
+            <div class="text-center">
+                <form method="GET" action="/guessMovieGame/medium">
+                    <button type="submit" class="btn btn-purple">Medium</button>
+                </form>
+            </div>
+
+            <br>
+
+            <div class="text-center">
+                <form method="GET" action="/guessMovieGame/hard">
+                    <button type="submit" class="btn btn-purple">Hard</button>
+                </form>
+            </div>
+
+            <br>
+
+            <div class="text-center">
+                <form method="GET" action="/protected/dashboard">
+                    <button type="submit" class="btn btn-purple">
+                        <i class="bi bi-check2-circle me-2"></i>Back
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
